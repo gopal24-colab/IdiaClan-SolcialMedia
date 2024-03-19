@@ -8,6 +8,7 @@ const app = express();
 
 const homeRouter = require("./routes/home.routing");
 const userRouter = require("./routes/user.routing");
+const postRouter = require("./routes/post.routing");
 
 /**
  * @dev middleware space
@@ -43,6 +44,7 @@ app.use(function (req, res, next) {
 
 app.use('/',homeRouter);
 app.use("/api/v2/user", userRouter);
+app.use("/api/v2/post", postRouter);
 
 
 app.use((error, req, res, next) => {
