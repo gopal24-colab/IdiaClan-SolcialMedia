@@ -5,7 +5,7 @@ const jwt = require("jsonwebtoken");
 const Login = async (req, res) => {
   try {
     const { email, password } = req.body;
-    
+
     const user = await User.findOne({ email });
     if (!user) {
       return res.status(401).json({ message: "Invalid email or password" });
@@ -15,9 +15,12 @@ const Login = async (req, res) => {
     if (!isMatch) {
       return res.status(401).json({ message: "Invalid email or password" });
     }
-    
+
     const payload = { userId: user._id };
-    const token = jwt.sign(payload, process.env.JWT_SECRET_KEY, { expiresIn: "1h" });
+    const token = jwt.sign(payload, process.env.JWT_SECRET_KEY, {
+      expiresIn: "1h",
+    });
+    req.session.token = token;
 
     res.json({ message: "Login successful", token });
   } catch (error) {
