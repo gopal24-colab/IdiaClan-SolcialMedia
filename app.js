@@ -6,6 +6,8 @@ const cookieParser = require("cookie-parser");
 const session = require("express-session");
 const { ApolloServer } = require("@apollo/server");
 const { expressMiddleware } = require("@apollo/server/express4");
+const { getUsers, getSingleUser } = require("./controllers/GetAllUsers");
+const { getPosts } = require("./controllers/GetAllPost");
 const app = express();
 
 const homeRouter = require("./routes/home.routing");
@@ -43,31 +45,33 @@ app.use(function (req, res, next) {
 });
 
 (async function () {
+  const allPosts = await getPosts();
+  const allUser = await getUsers();
+  
   const server = new ApolloServer({
     typeDefs: `
       type User {
-        id: ID!
-        name: String!
+        _id: ID!
         username: String!
         email: String!
+        followers: [User]
+        following: [User]
       }
 
-      type Todo {
-          id: ID!
-          title: String!
-          completed: Boolean
-          user: User
+      type Post {
+        content: String
+        author: ID!
       }
 
       type Query {
-          getTodos: [Todo]
-          getAllUsers: [User]
-          getUser(id: ID!): User
+        getUsers: [User]
+        getPosts: [Post]
       }
     `,
     resolvers: {
       Query: {
-        getTodos: () => [{id: 1, title: 'Gopal sasmal'}],
+        getUsers: () => allUser,
+        getPosts: () => allPosts,
       },
     },
   });

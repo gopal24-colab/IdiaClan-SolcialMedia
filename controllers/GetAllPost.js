@@ -2,7 +2,7 @@ const Post = require("../models/Post");
 
 const getAllPost = async (req, res) => {
   const { userId } = req;
-  console.log(userId);
+
   try {
     const posts = await Post.find({ author: userId }).sort({ createdAt: -1 });
     res.json({ message: "Posts retrieved successfully", posts });
@@ -11,4 +11,12 @@ const getAllPost = async (req, res) => {
   }
 };
 
-module.exports = getAllPost;
+const getPosts = async () => {
+  try {
+    return await Post.find({}).sort({ createdAt: -1 });
+  } catch (error) {
+    return [{ message: "Error fetching posts" }];
+  }
+};
+
+module.exports = { getAllPost, getPosts };

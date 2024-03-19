@@ -2,7 +2,7 @@ const Post = require("../models/Post");
 
 const CreatePost = async (req, res) => {
   const { userId } = req;
-  const data = req.body;
+  const { data } = req.body;
 
   const newPost = new Post({
     author: userId,

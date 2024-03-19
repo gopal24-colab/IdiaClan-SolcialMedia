@@ -2,7 +2,7 @@ const express = require("express");
 const Router = express.Router();
 const post = require("../controllers/Post");
 const authenticateUser = require("../middlewares/AuthenticateUser");
-const getAllPost = require("../controllers/GetAllPost");
+const { getAllPost } = require("../controllers/GetAllPost");
 
 Router.route("/create")
   .get((req, res) => {
@@ -12,7 +12,6 @@ Router.route("/create")
   })
   .post(authenticateUser, post);
 
-
-Router.route('/allPost').post(authenticateUser, getAllPost);
+Router.route("/allPost").post(authenticateUser, getAllPost);
 
 module.exports = Router;
