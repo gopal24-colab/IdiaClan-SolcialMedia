@@ -12,6 +12,8 @@ Router.route("/create")
   })
   .post(authenticateUser, post);
 
-Router.route("/allPost").post(authenticateUser, getAllPost);
+Router.route("/allPost")
+  .get(authenticateUser, getAllPost)
+  .post(authenticateUser, getAllPost);
 
 module.exports = Router;
