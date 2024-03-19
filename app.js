@@ -3,7 +3,9 @@ require("dotenv").config();
 const morgan = require("morgan");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
-const session = require('express-session'); 
+const session = require("express-session");
+const { ApolloServer } = require("@apollo/server");
+const { expressMiddleware } = require("@apollo/server/express4");
 const app = express();
 
 const homeRouter = require("./routes/home.routing");
@@ -16,16 +18,18 @@ const postRouter = require("./routes/post.routing");
 app.use(express.json());
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: false, limit: "50mb" }));
-app.use(session({
+app.use(
+  session({
     secret: process.env.SESSION_SECRET_KEY,
     resave: true,
     saveUninitialized: false,
     cookie: {
-      secure: process.env.NODE_ENV === 'production', 
-      httpOnly: true, 
+      secure: process.env.NODE_ENV === "production",
+      httpOnly: true,
       maxAge: 1000 * 60 * 60 * 1,
     },
-  }));
+  })
+);
 app.use(morgan("tiny")); // Log request path
 app.disable("x-powered-by");
 app.use(function (req, res, next) {
@@ -38,14 +42,46 @@ app.use(function (req, res, next) {
   next();
 });
 
+(async function () {
+  const server = new ApolloServer({
+    typeDefs: `
+      type User {
+        id: ID!
+        name: String!
+        username: String!
+        email: String!
+      }
+
+      type Todo {
+          id: ID!
+          title: String!
+          completed: Boolean
+          user: User
+      }
+
+      type Query {
+          getTodos: [Todo]
+          getAllUsers: [User]
+          getUser(id: ID!): User
+      }
+    `,
+    resolvers: {
+      Query: {
+        getTodos: () => [{id: 1, title: 'Gopal sasmal'}],
+      },
+    },
+  });
+  await server.start();
+  app.use("/graphql", expressMiddleware(server));
+})();
+
 /**
  * @dev Routing requests
  */
 
-app.use('/',homeRouter);
+app.use("/", homeRouter);
 app.use("/api/v2/user", userRouter);
 app.use("/api/v2/post", postRouter);
-
 
 app.use((error, req, res, next) => {
   error.statusCode = error.statusCode || 500;
