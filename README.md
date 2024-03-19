@@ -140,6 +140,22 @@ GET http://localhost:3000
 ```
 provide userId that you wants to follow
 
+
+## Live Replit URL Link
+```http
+    https://03298ff0-677c-4127-b9e5-a2dcd8dbfd49-00-1aauyq2xjbtu5.worf.replit.dev/
+```
+
+## Github Link
+```http
+    [Github](https://github.com/gopal24-colab/IdiaClan-SolcialMedia)
+```
+
+## Replit Join Link
+```http
+    https://replit.com/join/newluiqxqy-shadowxkrishna
+```
+
 ## License
 
 [MIT](https://choosealicense.com/licenses/mit/)
