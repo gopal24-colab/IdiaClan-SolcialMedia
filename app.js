@@ -4,6 +4,7 @@ const bodyParser = require("body-parser");
 const app = express();
 
 const homeRouter = require("./routes/home.routing");
+const userRouter = require("./routes/user.routing");
 
 /**
  * @dev middleware space
@@ -11,6 +12,7 @@ const homeRouter = require("./routes/home.routing");
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: false, limit: "50mb" }));
 app.use(morgan("tiny")); // Log request path
+app.disable("x-powered-by");
 app.use(function (req, res, next) {
   res.header("Content-Type", "application/json;charset=UTF-8");
   res.header("Access-Control-Allow-Credentials", true);
@@ -26,6 +28,7 @@ app.use(function (req, res, next) {
  */
 
 app.use('/',homeRouter);
+app.use("/api/v2/user", userRouter);
 
 
 app.use((error, req, res, next) => {
